@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR"><head><!-- deploy-teste 2026-10-12 --><meta charset="utf-8">
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="description" content="HETIA: mapa de vendas e rastreamento de pedidos para restaurantes. Veja de onde vêm seus clientes, ticket médio por bairro e os melhores dias e horários."><meta name="theme-color" content="#faf8f7"><meta property="og:title" content="HETIA | Mapa de Vendas e Rastreamento"><meta property="og:description" content="Descubra de onde vêm suas vendas e acompanhe cada pedido em tempo real."><meta property="og:type" content="website"><meta property="og:locale" content="pt_BR"><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231a1517'/%3E%3Cpath d='M16 5a7 7 0 0 0-7 7c0 5 7 15 7 15s7-10 7-15a7 7 0 0 0-7-7z' fill='%23d64550'/%3E%3Ccircle cx='16' cy='12' r='2.6' fill='%23fff'/%3E%3C/svg%3E">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>HETIA | Mapa de Vendas e Rastreamento</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -290,7 +290,7 @@ header.scrolled::before{background:rgba(21,16,17,.82);box-shadow:0 8px 28px rgba
 .lead{stroke:#fff;filter:drop-shadow(0 0 1.5px rgba(0,0,0,.9))}
 .ill .ring{stroke:#fff;filter:drop-shadow(0 0 2px rgba(0,0,0,.9))}.ill .dot{fill:#fff;filter:drop-shadow(0 0 2px rgba(0,0,0,.9))}.ill polygon{stroke:#2a2526;stroke-opacity:.85;stroke-width:2.5;filter:none}
 .lead{stroke:#2a2526;filter:none}.ill .ring{stroke:#2a2526;filter:none}.ill .dot{fill:#2a2526;filter:none}
-.ill text{fill:#2a2526;stroke:rgba(255,255,255,.92);stroke-width:5px}</style></head><body><div id="prog"></div><div id="toasts" aria-live="polite"></div><div class="w">
+.ill text{fill:#2a2526;stroke:rgba(255,255,255,.92);stroke-width:5px}</style><style>:focus-visible{outline:2px solid var(--ac);outline-offset:2px}@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}</style></head><body><div id="prog"></div><div id="toasts" aria-live="polite"></div><div class="w">
 <header><div class="logo" role="img" aria-label="HETIA, Mapa de Vendas e Rastreamento"><div><svg class="wm" viewBox="0 0 176 52" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 18v26M28 18v26M4 31h24"/><path d="M44 18v26M44 18h22M44 31h18M44 44h22"/><path d="M76 18h30M91 18v26"/><path d="M120 31v13"/><path d="M136 44l16-26 16 26M142 35h20"/><g class="pin"><path d="M120 3.5c-4.4 0-8 3.4-8 7.6 0 5 8 12 8 12s8-7 8-12c0-4.2-3.6-7.6-8-7.6z" fill="#d64550" stroke="none"/><circle cx="120" cy="11" r="3" fill="#fff" stroke="none"/></g></svg><small>Mapa de Vendas e Rastreamento</small></div></div>
 <div class="tabs hide" id="tabs"><button class="on" data-t="d">Painel do dono</button><button data-t="p">Produtos por região</button><button data-t="h">Dias e horários</button><button data-t="i">Integração</button><button data-t="a">Avaliar o HETIA</button><button id="out">Sair</button></div><div id="hdrAuth" class="hide"><button id="hpr">Produto</button><button id="hl">Entrar</button><button id="hc" class="on">Criar conta</button></div></header>
 
@@ -352,7 +352,7 @@ header.scrolled::before{background:rgba(21,16,17,.82);box-shadow:0 8px 28px rgba
 <div id="app" class="hide">
 <div id="demobar" class="hide"><b>Modo demonstração.</b> Estes são dados de exemplo para você conhecer o painel. Quando chegar o primeiro pedido real, eles somem sozinhos. <button type="button" id="hideDemo">Ocultar exemplo</button></div>
 <section id="d"><div class="demo" id="live" style="margin-top:12px"></div><div class="kp" id="kp" style="margin-top:8px"></div>
-<div class="bar"><select id="per"><option value="1">Hoje</option><option value="7">Últimos 7 dias</option><option value="30" selected>Últimos 30 dias</option><option value="90">Últimos 90 dias</option></select>
+<div class="bar"><select id="per" aria-label="Período"><option value="1">Hoje</option><option value="7">Últimos 7 dias</option><option value="30" selected>Últimos 30 dias</option><option value="90">Últimos 90 dias</option></select>
 <div class="seg" id="met"><button class="on" data-m="o">Pedidos</button><button data-m="r">Faturamento</button><button data-m="t">Ticket médio</button></div><select id="reg" aria-label="Região"></select></div>
 <div class="card hide" id="empty"><b>Seu mapa de vendas aparecerá aqui.</b><div class="demo" style="margin-top:6px">Comece a receber pedidos pelo seu cardápio para descobrir quais regiões mais compram.</div><button type="button" id="showDemo" class="on hide" style="margin-top:10px">Ver exemplo com dados de demonstração</button></div>
 <div class="g" id="mapwrap"><div class="card"><div class="mp"><div id="lmap"></div></div><div class="leg">Menos vendas<span class="sw"><em style="background:#e5534b"></em><em style="background:#f2c230"></em><em style="background:#3fae6a"></em></span>Mais vendas</div><div class="demo" id="gs"></div></div>
@@ -361,11 +361,11 @@ header.scrolled::before{background:rgba(21,16,17,.82);box-shadow:0 8px 28px rgba
 <div class="card" style="margin-top:12px"><b>Resumo do período</b><div id="ins" class="igrid"></div></div>
 <div class="card" style="margin-top:12px"><div class="ohd"><b>Pedidos recentes</b><span>Toque no status para alterar</span></div><div id="ro" class="ords"></div></div></section>
 
-<section id="p" class="hide"><div class="bar" style="margin-top:12px"><select id="pp"><option value="1">Hoje</option><option value="7">Últimos 7 dias</option><option value="30">Últimos 30 dias</option><option value="90">Últimos 90 dias</option></select><select id="pr" aria-label="Região"></select><select id="pq" aria-label="Produto"></select></div>
+<section id="p" class="hide"><div class="bar" style="margin-top:12px"><select id="pp" aria-label="Período"><option value="1">Hoje</option><option value="7">Últimos 7 dias</option><option value="30">Últimos 30 dias</option><option value="90">Últimos 90 dias</option></select><select id="pr" aria-label="Região"></select><select id="pq" aria-label="Produto"></select></div>
 <div class="g2"><div class="card" id="pa"></div><div class="card" id="pb"></div></div>
 <div class="card" style="margin-top:12px"><div class="ptt">Produtos × regiões</div><div class="psub">A cor compara as regiões dentro de cada produto: verde vende mais, vermelho vende menos. O ponto marca o produto líder da região.</div><div id="pt" style="overflow-x:auto"></div></div></section>
 
-<section id="h" class="hide"><div class="bar" style="margin-top:12px"><select id="hp"><option value="1">Hoje</option><option value="7">Últimos 7 dias</option><option value="30">Últimos 30 dias</option><option value="90">Últimos 90 dias</option></select><select id="cm"></select><select id="cx"><option value="o">Pedidos</option><option value="r">Faturamento</option></select></div>
+<section id="h" class="hide"><div class="bar" style="margin-top:12px"><select id="hp" aria-label="Período"><option value="1">Hoje</option><option value="7">Últimos 7 dias</option><option value="30">Últimos 30 dias</option><option value="90">Últimos 90 dias</option></select><select id="cm" aria-label="Mês do calendário"></select><select id="cx" aria-label="Métrica do calendário"><option value="o">Pedidos</option><option value="r">Faturamento</option></select></div>
 <div class="card" id="cal"></div>
 <div class="g2" style="margin-top:12px"><div class="card" id="da"></div><div class="card" id="db"></div></div>
 <div class="card" style="margin-top:12px"><div class="ptt">Resumo da demanda</div><div id="di" class="igrid"></div></div></section>
@@ -375,10 +375,10 @@ header.scrolled::before{background:rgba(21,16,17,.82);box-shadow:0 8px 28px rgba
 <div class="igh"><h2>Conecte seu sistema em 3 passos</h2><p class="demo">Cada pedido do seu cardápio chega ao HETIA sozinho e alimenta o mapa e os gráficos.</p></div>
 <div class="ist" id="s1"><span class="isn">1</span><div class="isb"><b>Crie uma chave</b><small>Ela identifica o seu restaurante. Dê um nome, como "Sistema do balcão".</small>
 <div class="isr"><input id="inm" maxlength="60" placeholder="Nome da integração"><button class="on" id="inb">Criar chave</button></div>
-<div id="ikn" class="hide ikey"><b>Copie agora. Ela aparece uma única vez.</b><div class="isr"><input id="ikv" readonly><button id="ikc">Copiar</button></div></div>
+<div id="ikn" class="hide ikey"><b>Copie agora. Ela aparece uma única vez.</b><div class="isr"><input id="ikv" aria-label="Chave de API" readonly><button id="ikc">Copiar</button></div></div>
 <div id="ils"></div></div></div>
 <div class="ist" id="s2"><span class="isn">2</span><div class="isb"><b>Cole o endereço no seu sistema</b><small>Peça ao suporte do seu cardápio para enviar cada pedido para este endereço, com a chave no cabeçalho <code>x-hetia-key</code>.</small>
-<div class="isr"><input id="iwu" readonly><button id="iwc">Copiar</button></div></div></div>
+<div class="isr"><input id="iwu" aria-label="Endereço do webhook" readonly><button id="iwc">Copiar</button></div></div></div>
 <div class="ist" id="s3"><span class="isn">3</span><div class="isb"><b>Envie um pedido de teste</b><small>Confirma que tudo está funcionando. O pedido aparece no painel como TESTE.</small>
 <div class="isr"><button id="itb" class="on">Enviar pedido de teste</button></div><div class="itm" id="itm"></div></div></div>
 <details class="idt"><summary>Detalhes para quem vai programar</summary>
