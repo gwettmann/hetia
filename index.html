@@ -401,7 +401,7 @@ const col=t=>t<1/3?"#e5534b":t<2/3?"#f2c230":"#3fae6a";
 const DN=["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"],ST=["received","preparing","ready","out_for_delivery","delivered"];
 const SL={received:"Pedido recebido",preparing:"Em preparo",ready:"Pedido pronto",out_for_delivery:"Saiu para entrega",delivered:"Entregue",canceled:"Cancelado"};
 const MSG={received:"Recebemos seu pedido.",preparing:"Seu pedido está sendo preparado.",ready:"Seu pedido está pronto e será enviado em breve.",out_for_delivery:"Seu pedido saiu para entrega.",delivered:"Pedido entregue.",canceled:"Este pedido foi cancelado."};
-let liveOk=false,me=null,per=30,met="o",reg="",preg="",pprod="",selDay=null,CITY="",L0={hood:[],prev:[],prod:[],dh:[],recent:[]},CAL=[],LM,LG,LP={},geoState="idle",fitted=false,tm;
+let liveOk=false,me=null,per=30,met="o",reg="",preg="",pprod="",selDay=null,CITY="",L0={hood:[],prev:[],prod:[],dh:[],recent:[]},CAL=[],LM,LG,LP={},geoState="idle",fitted=false,needFit=false,tm;
 const TRIED={},GKEY="hetia_geo_v2";let GEO={};try{GEO=JSON.parse(localStorage.getItem(GKEY)||"{}")}catch(e){}
 const gk=n=>CITY+"|"+n,sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const val=b=>met=="o"?b.o:met=="r"?b.r:b.r/b.o,fmt=b=>met=="o"?b.o+" pedidos":brl(val(b));
@@ -498,7 +498,7 @@ async function loadGeo(){
   geoState="done";draw(data())}
 function draw(D){
   if(!D.length)return;const mx=Math.max(...D.map(val)),mn=Math.min(...D.map(val));
-  if(!LM){LM=L.map("lmap").setView([-15.8,-47.9],4);L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; OpenStreetMap"}).addTo(LM);LG=L.featureGroup().addTo(LM)}
+  if(!LM){LM=L.map("lmap").setView([-15.8,-47.9],4);if(window.ResizeObserver)new ResizeObserver(()=>{if(!LM||$("#lmap").offsetWidth<40)return;LM.invalidateSize();if((needFit||!fitted)&&LG.getLayers().length){fitted=true;needFit=false;LM.fitBounds(LG.getBounds().pad(.15))}}).observe($("#lmap"));L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; OpenStreetMap"}).addTo(LM);LG=L.featureGroup().addTo(LM)}
   LG.clearLayers();LP={};let ng=0;
   D.forEach(b=>{const gj=GEO[gk(b.n)];if(!gj)return;ng++;const sel=b.n==reg,st={color:sel?"#d64550":"#2a2526",weight:sel?4:2.5,opacity:1,fillColor:col((val(b)-mn)/(mx-mn||1)),fillOpacity:.6};
     const pg=L.geoJSON(gj,{style:()=>st}).addTo(LG);LP[b.n]=pg;
@@ -506,7 +506,7 @@ function draw(D){
     pg.on("click",()=>selReg(b.n));
     L.marker(pg.getBounds().getCenter(),{interactive:false,icon:L.divIcon({className:"",html:`<span class="lb2">${E(b.n)}</span>`,iconSize:[0,0]})}).addTo(LG)});
   const tot=D.filter(b=>b.n!="Sem bairro").length;
-  if(ng&&!fitted&&(ng==tot||geoState=="done")){fitted=true;LM.invalidateSize();LM.fitBounds(LG.getBounds().pad(.15))}
+  if(ng&&!fitted&&(ng==tot||geoState=="done")){LM.invalidateSize();if($("#lmap").offsetWidth>40){fitted=true;LM.fitBounds(LG.getBounds().pad(.15))}else needFit=true}
   $("#gs").textContent=ng==tot?"Limites reais dos bairros (© OpenStreetMap). Dados agregados por bairro, nenhuma residência é exibida.":geoState=="done"?"Alguns bairros não tiveram limite encontrado e não aparecem no mapa, mas estão no ranking.":"Carregando os limites reais dos bairros (OpenStreetMap)...";
   setTimeout(()=>LM.invalidateSize(),50)}
 
@@ -700,7 +700,7 @@ $("#p").addEventListener("click",e=>{const t=e.target.closest("[data-p]");if(!t)
 $("#p").addEventListener("keydown",e=>{if((e.key=="Enter"||e.key==" ")&&e.target.dataset&&e.target.dataset.p){e.preventDefault();e.target.click()}});
 $("#pr").onchange=e=>{preg=e.target.value;prod()};$("#pq").onchange=e=>{pprod=e.target.value;prod()};
 $("#cm").onchange=()=>{selDay=null;loadCal()};$("#cx").onchange=cal;
-$$("#tabs button[data-t]").forEach(b=>b.onclick=()=>{$$("#tabs button[data-t]").forEach(x=>x.classList.toggle("on",x==b));["d","p","h","i","a"].forEach(k=>$("#"+k).classList.toggle("hide",b.dataset.t!=k));if(LM)setTimeout(()=>LM.invalidateSize(),60)});
+$$("#tabs button[data-t]").forEach(b=>b.onclick=()=>{$$("#tabs button[data-t]").forEach(x=>x.classList.toggle("on",x==b));["d","p","h","i","a"].forEach(k=>$("#"+k).classList.toggle("hide",b.dataset.t!=k));if(LM)setTimeout(()=>{LM.invalidateSize();if(needFit&&LG.getLayers().length&&$("#lmap").offsetWidth>40){needFit=false;fitted=true;LM.fitBounds(LG.getBounds().pad(.15))}},60)});
 (async()=>{
   const tk=((location.pathname.match(/pedido\/acompanhar\/([a-f0-9]{32})/)||location.search.match(/[?&]t=([a-f0-9]{32})/))||[])[1];
   if(tk)return track(tk);
