@@ -496,6 +496,7 @@ async function loadGeo(){
     try{localStorage.setItem(GKEY,JSON.stringify(GEO))}catch(e){}
     draw(data());await sleep(1100)}
   geoState="done";draw(data())}
+function tryFit(n){if(!needFit||!LM||n>240)return;if($("#lmap").offsetWidth>40&&LG.getLayers().length){LM.invalidateSize();needFit=false;fitted=true;LM.fitBounds(LG.getBounds().pad(.15))}else setTimeout(()=>tryFit(n+1),500)}
 function draw(D){
   if(!D.length)return;const mx=Math.max(...D.map(val)),mn=Math.min(...D.map(val));
   if(!LM){LM=L.map("lmap").setView([-15.8,-47.9],4);if(window.ResizeObserver)new ResizeObserver(()=>{if(!LM||$("#lmap").offsetWidth<40)return;LM.invalidateSize();if((needFit||!fitted)&&LG.getLayers().length){fitted=true;needFit=false;LM.fitBounds(LG.getBounds().pad(.15))}}).observe($("#lmap"));L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; OpenStreetMap"}).addTo(LM);LG=L.featureGroup().addTo(LM)}
@@ -506,7 +507,7 @@ function draw(D){
     pg.on("click",()=>selReg(b.n));
     L.marker(pg.getBounds().getCenter(),{interactive:false,icon:L.divIcon({className:"",html:`<span class="lb2">${E(b.n)}</span>`,iconSize:[0,0]})}).addTo(LG)});
   const tot=D.filter(b=>b.n!="Sem bairro").length;
-  if(ng&&!fitted&&(ng==tot||geoState=="done")){LM.invalidateSize();if($("#lmap").offsetWidth>40){fitted=true;LM.fitBounds(LG.getBounds().pad(.15))}else needFit=true}
+  if(ng&&!fitted&&(ng==tot||geoState=="done")){LM.invalidateSize();if($("#lmap").offsetWidth>40){fitted=true;LM.fitBounds(LG.getBounds().pad(.15))}else{needFit=true;tryFit(0)}}
   $("#gs").textContent=ng==tot?"Limites reais dos bairros (© OpenStreetMap). Dados agregados por bairro, nenhuma residência é exibida.":geoState=="done"?"Alguns bairros não tiveram limite encontrado e não aparecem no mapa, mas estão no ranking.":"Carregando os limites reais dos bairros (OpenStreetMap)...";
   setTimeout(()=>LM.invalidateSize(),50)}
 
